@@ -40,7 +40,7 @@
             <label for="password">Password</label>
             <input
               v-model="user.password"
-              v-validate="'required|min:6|max:40'"
+              v-validate="{ required: true, min: 8, regex: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!()@$%^&*-+/]).*$/ }"
               type="password"
               class="form-control"
               name="password"
