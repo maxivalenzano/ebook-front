@@ -20,6 +20,7 @@ export default {
     UserService.getUserBoard().then(
       response => {
         this.content = response.data;
+        console.log(this.content);
       },
       error => {
         this.content =

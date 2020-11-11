@@ -7,11 +7,11 @@ import Register from '../views/Register.vue';
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
+// {
+//   path: '/',
+//    name: 'home',
+//    component: Home
+//  },
   {
     path: '/home',
     component: Home
@@ -47,6 +47,22 @@ const routes = [
     name: 'user',
     // lazy-loaded
     component: () => import('../views/BoardUser.vue')
+  },
+  {
+    path: "/",
+    alias: "/tutorials",
+    name: "tutorials",
+    component: () => import("../components/TutorialsList")
+  },
+  {
+    path: "/tutorials/:id",
+    name: "tutorial-details",
+    component: () => import("../components/Tutorial")
+  },
+  {
+    path: "/add",
+    name: "add",
+    component: () => import("../components/AddTutorial")
   }
 ]
 
