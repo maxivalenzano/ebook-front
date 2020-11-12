@@ -9,6 +9,8 @@
 
       <v-btn to="/add" text> Agregar </v-btn>
 
+      <v-btn to="/ebooks-list" text> Mis libros </v-btn>
+
       <v-btn v-if="currentUser" to="/profile" text> User </v-btn>
 
       <v-btn v-if="showAdminBoard" to="/admin" text> Admin Board </v-btn>

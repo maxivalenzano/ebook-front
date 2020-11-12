@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import TutorialDataService from "../services/TutorialDataService";
+import TutorialDataService from "../services/ebook.service";
 export default {
   name: "tutorials-list",
   data() {

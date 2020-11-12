@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import Login from '../components/Login.vue';
+import Register from '../components/Register.vue';
 
 Vue.use(VueRouter)
 
@@ -63,7 +63,12 @@ const routes = [
     path: "/add",
     name: "add",
     component: () => import("../components/AddTutorial")
-  }
+  },
+  {
+  path: "/ebooks-list",
+  name: "ebooks-list",
+  component: () => import("../components/EBooksList")
+},
 ]
 
 const router = new VueRouter({
