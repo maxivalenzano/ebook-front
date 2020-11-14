@@ -21,7 +21,7 @@
         <v-spacer />
 
         <v-btn
-          title="Go to top"
+          title="Ir a arriba"
           @click="$vuetify.goTo(0)"
           text
         >

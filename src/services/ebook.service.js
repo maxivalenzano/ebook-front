@@ -10,6 +10,7 @@ class EbookDataService {
   }
 
   create(data) {
+    console.log(data);
     return http.post("/ebooks", data);
   }
 

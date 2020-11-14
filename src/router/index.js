@@ -62,7 +62,7 @@ const routes = [
   {
     path: "/add",
     name: "add",
-    component: () => import("../components/UploadFiles")
+    component: () => import("../components/AddEbook")
   },
   {
   path: "/list",
