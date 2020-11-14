@@ -6,30 +6,27 @@
   >
     <v-container class="mx-auto">
       <v-row>
-        <v-col cols="9">
-          <base-btn
+          <v-btn
             v-for="(item, i) in items"
             :key="i"
             :href="item.href"
             class="ml-0 mr-3"
-            color="primary"
             square
             target="_blank"
+            text
           >
             <v-icon v-text="item.icon" />
-          </base-btn>
-        </v-col>
+          </v-btn>
 
         <v-spacer />
 
-        <base-btn
-          class="mr-0"
-          square
+        <v-btn
           title="Go to top"
           @click="$vuetify.goTo(0)"
+          text
         >
           <v-icon>mdi-chevron-up</v-icon>
-        </base-btn>
+        </v-btn>
       </v-row>
     </v-container>
   </v-footer>
@@ -37,16 +34,16 @@
 
 <script>
   export default {
-    name: 'CoreFooter',
+    name: 'Footer',
 
     data: () => ({
       items: [
         {
-          href: '#!',
+          href: 'https://twitter.com/MaxiValenzano',
           icon: 'mdi-twitter',
         },
         {
-          href: '#!',
+          href: 'https://www.instagram.com/maxivalenzano/',
           icon: 'mdi-instagram',
         },
         {

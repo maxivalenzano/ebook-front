@@ -1,29 +1,29 @@
 <template>
-  <div v-if="currentTutorial" class="edit-form py-3">
-    <p class="headline">Edit Tutorial</p>
+  <div v-if="currentEbook" class="edit-form py-3">
+    <p class="headline">Edit Ebook</p>
 
     <v-form ref="form" v-model="valid" lazy-validation>
       <v-text-field
-        v-model="currentTutorial.title"
+        v-model="currentEbook.title"
         :rules="[(v) => !!v || 'Title is required']"
         label="Title"
         required
       ></v-text-field>
 
       <v-text-field
-        v-model="currentTutorial.description"
+        v-model="currentEbook.description"
         :rules="[(v) => !!v || 'Description is required']"
         label="Description"
         required
       ></v-text-field>
 
       <label><strong>Status:</strong></label>
-      {{ currentTutorial.published ? "Published" : "Pending" }}
+      {{ currentEbook.published ? "Published" : "Pending" }}
 
       <v-divider class="my-5"></v-divider>
 
       <v-btn
-        v-if="currentTutorial.published"
+        v-if="currentEbook.published"
         @click="updatePublished(false)"
         color="primary"
         small
@@ -42,11 +42,11 @@
         Publish
       </v-btn>
 
-      <v-btn color="error" small class="mr-2" @click="deleteTutorial">
+      <v-btn color="error" small class="mr-2" @click="deleteEbook">
         Delete
       </v-btn>
 
-      <v-btn color="success" small @click="updateTutorial"> Update </v-btn>
+      <v-btn color="success" small @click="updateEbook"> Update </v-btn>
     </v-form>
 
     <p class="mt-3">{{ message }}</p>
@@ -54,25 +54,25 @@
 
   <div v-else>
     <br />
-    <p>Please click on a Tutorial...</p>
+    <p>Please click on a Ebook...</p>
   </div>
 </template>
 
 <script>
-import TutorialDataService from "../services/ebook.service";
+import EbookDataService from "../services/ebook.service";
 export default {
-  name: "tutorial",
+  name: "ebook",
   data() {
     return {
-      currentTutorial: null,
+      currentEbook: null,
       message: "",
     };
   },
   methods: {
-    getTutorial(id) {
-      TutorialDataService.get(id)
+    getEbook(id) {
+      EbookDataService.get(id)
         .then((response) => {
-          this.currentTutorial = response.data;
+          this.currentEbook = response.data;
           console.log(response.data);
         })
         .catch((e) => {
@@ -81,35 +81,35 @@ export default {
     },
     updatePublished(status) {
       var data = {
-        id: this.currentTutorial.id,
-        title: this.currentTutorial.title,
-        description: this.currentTutorial.description,
+        id: this.currentEbook.id,
+        title: this.currentEbook.title,
+        description: this.currentEbook.description,
         published: status,
       };
-      TutorialDataService.update(this.currentTutorial.id, data)
+      EbookDataService.update(this.currentEbook.id, data)
         .then((response) => {
-          this.currentTutorial.published = status;
+          this.currentEbook.published = status;
           console.log(response.data);
         })
         .catch((e) => {
           console.log(e);
         });
     },
-    updateTutorial() {
-      TutorialDataService.update(this.currentTutorial.id, this.currentTutorial)
+    updateEbook() {
+      EbookDataService.update(this.currentEbook.id, this.currentEbook)
         .then((response) => {
           console.log(response.data);
-          this.message = "The tutorial was updated successfully!";
+          this.message = "The ebook was updated successfully!";
         })
         .catch((e) => {
           console.log(e);
         });
     },
-    deleteTutorial() {
-      TutorialDataService.delete(this.currentTutorial.id)
+    deleteEbook() {
+      EbookDataService.delete(this.currentEbook.id)
         .then((response) => {
           console.log(response.data);
-          this.$router.push({ name: "tutorials" });
+          this.$router.push({ name: "ebooks" });
         })
         .catch((e) => {
           console.log(e);
@@ -118,7 +118,7 @@ export default {
   },
   mounted() {
     this.message = "";
-    this.getTutorial(this.$route.params.id);
+    this.getEbook(this.$route.params.id);
   },
 };
 </script>

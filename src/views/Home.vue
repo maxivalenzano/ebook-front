@@ -3,17 +3,22 @@
     <header class="jumbotron">
       <h3>{{content}}</h3>
     </header>
+<ViewPDF
+  :pdfPath="selectedPdf"
+/>
   </div>
 </template>
 
 <script>
 import UserService from '../services/user.service';
+const url = 'http://localhost:8080/api/files/ld-Analisis y Diseno de Sistemas_Kendall-8va.pdf';
 
 export default {
   name: 'Home',
   data() {
     return {
-      content: ''
+      content: '',
+      selectedPdf: url,
     };
   },
   mounted() {
@@ -28,6 +33,9 @@ export default {
           error.toString();
       }
     );
-  }
+  },
+  components: {
+    ViewPDF: () => import("../components/ViewPDF"),
+  },
 };
 </script>

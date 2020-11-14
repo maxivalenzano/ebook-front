@@ -5,11 +5,11 @@
         <router-link to="/home" class="navbar-brand"> eBook Store </router-link>
       </div>
 
-      <v-btn to="/tutorials" text> Libros </v-btn>
+      <v-btn to="/ebooks" text> Libros </v-btn>
 
       <v-btn to="/add" text> Agregar </v-btn>
 
-      <v-btn to="/ebooks-list" text> Mis libros </v-btn>
+      <v-btn to="/list" text> Mis libros </v-btn>
 
       <v-btn v-if="currentUser" to="/profile" text> User </v-btn>
 
@@ -41,6 +41,8 @@
     <v-main>
       <router-view />
     </v-main>
+    
+    <Footer> </Footer>
   </v-app>
 </template>
 
@@ -69,6 +71,14 @@ export default {
       this.$store.dispatch("auth/logout");
       this.$router.push("/login");
     },
+  },
+  components: {
+    Footer: () => import("./components/Footer")
+  },
+  mounted() {
+    if (!this.currentUser) {
+      this.$router.push("/login");
+    }
   },
 };
 </script>

@@ -50,24 +50,24 @@ const routes = [
   },
   {
     path: "/",
-    alias: "/tutorials",
-    name: "tutorials",
-    component: () => import("../components/TutorialsList")
+    alias: "/ebooks",
+    name: "ebooks",
+    component: () => import("../components/EbooksList")
   },
   {
-    path: "/tutorials/:id",
-    name: "tutorial-details",
-    component: () => import("../components/Tutorial")
+    path: "/ebooks/:id",
+    name: "ebook-details",
+    component: () => import("../components/Ebook")
   },
   {
     path: "/add",
     name: "add",
-    component: () => import("../components/AddTutorial")
+    component: () => import("../components/UploadFiles")
   },
   {
-  path: "/ebooks-list",
-  name: "ebooks-list",
-  component: () => import("../components/EBooksList")
+  path: "/list",
+  name: "list",
+  component: () => import("../components/List")
 },
 ]
 
