@@ -1,4 +1,6 @@
 <template>
+<v-row class="list px-3 mx-auto">
+  <h2 class="display-1 mb-4 mt-4">Añadir un libro nuevo</h2>
   <v-card flat>
     <v-snackbar
       v-if="!error"
@@ -88,7 +90,7 @@
               show-size
               placeholder="Seleccione un archivo"
               label="PDF"
-              @change.prevent="selectFile"
+              @change="selectFile"
             ></v-file-input>
             <div v-if="currentFile">
               <v-progress-linear
@@ -116,7 +118,7 @@
               show-size
               placeholder="Seleccione una imagen"
               label="Portada"
-              @change.prevent="selectImage"
+              @change="selectImage"
             ></v-file-input>
             <div v-if="currentImage">
               <v-progress-linear
@@ -143,6 +145,7 @@
       </v-card-actions>
     </v-form>
   </v-card>
+</v-row>
 </template>
 
 <script>
@@ -214,7 +217,7 @@ export default {
           this.error = false;
         })
         .catch((e) => {
-          this.message = e.message;
+          this.message = e.response.data.message;
           this.error = true;
           console.log(e);
         });
@@ -224,7 +227,7 @@ export default {
     },
     //primero subimos al servidor el archivo para obtener su url
     selectFile(file) {
-      this.messageF = "",
+      if (!file) {return}
       this.progress = 0;
       this.currentFile = file;
       //El progress se calculará basándose en event.loadedy event.total
@@ -242,7 +245,7 @@ export default {
         });
     },
     selectImage(image) {
-      this.messageI = "",
+      if (!image) {return}
       this.progressI = 0;
       this.currentImage = image;
       //El progress se calculará basándose en event.loadedy event.total
@@ -262,10 +265,19 @@ export default {
     resetForm() {
       this.form = Object.assign({}, this.defaultForm);
       this.$refs.form.reset();
+      this.currentFile= undefined;
+      this.currentImage = undefined;
+      this.ebook.url = "";
+      this.ebook.image = "";
+      this.progressI = 0;
+      this.progress = 0;
     },
   },
 };
 </script>
 
 <style>
+.list {
+  max-width: 961px;
+}
 </style>

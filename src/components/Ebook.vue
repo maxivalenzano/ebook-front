@@ -84,7 +84,6 @@ export default {
         id: this.currentEbook.id,
         title: this.currentEbook.title,
         description: this.currentEbook.description,
-        published: status,
       };
       EbookDataService.update(this.currentEbook.id, data)
         .then((response) => {

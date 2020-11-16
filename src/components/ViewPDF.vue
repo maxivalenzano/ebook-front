@@ -1,7 +1,7 @@
 <template>
-  <v-layout row justify-center>
+  <v-layout row class="list" mx-auto>
     <v-card width="100%" height="100%">
-      <v-toolbar dark color="primary">
+      <v-toolbar dark>
         <v-toolbar-title>Visor de PDF con Vuejs 2</v-toolbar-title>
         <v-flex> </v-flex>
       </v-toolbar>
@@ -9,7 +9,7 @@
         <v-layout row wrap>
           <v-flex>
             <pdf
-              :src="src"
+              :src="pdfPath"
               :page="currentPage"
               @num-pages="numPages = $event"
               @page-loaded="currentPage = $event"
@@ -19,24 +19,18 @@
         </v-layout>
       </v-container>
     </v-card>
-    <v-footer justify-center inset app>
+    <v-footer justify-center inset app dark>
       <v-layout>
         <v-flex>
-          <v-btn
-            class="primary"
-            block
-            :disabled="noPrevPage"
-            @click="prevPage()"
+          <v-btn class="grey" block :disabled="noPrevPage" @click="prevPage()"
             >Anterior
           </v-btn>
         </v-flex>
-        <v-flex justify-content>{{ currentPage }} / {{ numPages }}</v-flex>
         <v-flex>
-          <v-btn
-            class="primary"
-            block
-            :disabled="noNextPage"
-            @click="nextPage()"
+         <v-btn block text tile>{{ currentPage }} / {{ numPages }}</v-btn>
+        </v-flex>
+        <v-flex>
+          <v-btn class="grey" block :disabled="noNextPage" @click="nextPage()"
             >Siguiente
           </v-btn>
         </v-flex>
@@ -94,3 +88,8 @@ export default {
 // ></pdf>
 </script>
 
+<style>
+.list {
+  max-width: 961px;
+}
+</style>

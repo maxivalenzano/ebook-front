@@ -8,22 +8,22 @@
       />
       <form name="form" @submit.prevent="handleLogin">
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="email">Correo</label>
           <input
-            v-model="user.username"
+            v-model="user.email"
             v-validate="'required'"
-            type="text"
+            type="email"
             class="form-control"
-            name="username"
+            name="email"
           />
           <div
-            v-if="errors.has('username')"
+            v-if="errors.has('email')"
             class="alert alert-danger"
             role="alert"
-          >Username is required!</div>
+          >Ingrese su correo</div>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">Contraseña</label>
           <input
             v-model="user.password"
             v-validate="'required'"
@@ -35,7 +35,7 @@
             v-if="errors.has('password')"
             class="alert alert-danger"
             role="alert"
-          >Password is required!</div>
+          >La contraseña es requerida</div>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block" :disabled="loading">
@@ -82,7 +82,8 @@ export default {
           return;
         }
 
-        if (this.user.username && this.user.password) {
+        if (this.user.email && this.user.password) {
+            console.log(this.$store.dispatch('auth/login', this.user));
           this.$store.dispatch('auth/login', this.user).then(
             () => {
               this.$router.push('/profile');

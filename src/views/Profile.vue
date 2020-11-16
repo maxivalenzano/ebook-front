@@ -1,23 +1,23 @@
 <template>
-  <div class="container">
+  <div class="container list">
     <header class="jumbotron">
       <h3>
-        <strong>{{currentUser.username}}</strong> Profile
+        Bienvenido: <strong>{{currentUser.firstname}} {{currentUser.lastname}}</strong> 
       </h3>
     </header>
     <p>
-      <strong>Token:</strong>
-      {{currentUser.accessToken.substring(0, 20)}} ... {{currentUser.accessToken.substr(currentUser.accessToken.length - 20)}}
-    </p>
-    <p>
-      <strong>Id:</strong>
-      {{currentUser.id}}
+      <strong>Usuario:</strong>
+      {{currentUser.username}}
     </p>
     <p>
       <strong>Email:</strong>
       {{currentUser.email}}
     </p>
-    <strong>Authorities:</strong>
+    <strong>Titulos:</strong>
+    <ul>
+      <li v-for="(ebook, i) in content.ebooks" :key="i">{{ebook.title}}</li>
+    </ul>
+    <strong>Roles:</strong>
     <ul>
       <li v-for="(role,index) in currentUser.roles" :key="index">{{role}}</li>
     </ul>
@@ -25,8 +25,14 @@
 </template>
 
 <script>
+import UserService from "../services/user.service";
 export default {
   name: 'Profile',
+  data() {
+    return {
+      content: '',
+    }
+  },
   computed: {
     currentUser() {
       return this.$store.state.auth.user;
@@ -36,6 +42,18 @@ export default {
     if (!this.currentUser) {
       this.$router.push('/login');
     }
+    const user = this.$store.state.auth.user;
+    UserService.getListEBooks(user)
+      .then((response) => {
+        this.content = response.data;
+
+        console.log(this.content);
+      })
+      .catch((error) => {
+        console.log(error.response.data.message);
+        this.$store.dispatch("auth/logout");
+        this.$router.push("/login");
+      });
   }
 };
 </script>

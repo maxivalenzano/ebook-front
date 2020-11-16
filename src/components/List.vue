@@ -1,51 +1,34 @@
 <template>
-  <v-sheet class="mx-auto" elevation="8">
-    <v-slide-group v-model="model" class="pa-4" show-arrows>
-      <v-slide-item
-        v-for="(ebook, i) in content.ebooks"
-        :key="i"
-        v-slot="{ active, toggle }"
-        center-active
-      >
-        <v-card
-          :color="active ? 'primary' : 'grey lighten-1'"
-          class="ma-4"
-          height="400"
-          width="300"
-          @click="toggle"
-        >
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-            aspect-ratio="2.75"
-          ></v-img>
-          <v-card-title>
-            <div>
-              <h3 class="headline mb-0">{{ ebook.title }}</h3>
-              <div>{{ ebook.description }}</div>
-            </div>
-          </v-card-title>
-          <v-row class="fill-height" align="center" justify="center">
-            <v-scale-transition>
-              <v-icon
-                v-if="active"
-                color="white"
-                size="48"
-                v-text="'mdi-close-circle-outline'"
-              ></v-icon>
-            </v-scale-transition>
-          </v-row>
-        </v-card>
-      </v-slide-item>
-    </v-slide-group>
+  <v-container class="list mx-auto">
+    <h2 class="display-1 mb-4 mt-4">Mis Libros</h2>
+    <v-sheet class="mx-auto">
+      <v-slide-group v-model="model" show-arrows center-active>
+        <v-slide-item v-for="(ebook, i) in content.ebooks" :key="i">
+          <v-card color="grey lighten-4" class="ma-4" width="200">
+            <v-img :src="ebook.image" aspect-ratio="1"></v-img>
+            <v-card-title>
+              {{ ebook.title }}
+            </v-card-title>
+            <v-card-subtitle>
+              {{ ebook.author }}
+            </v-card-subtitle>
 
-    <v-expand-transition>
-      <v-sheet v-if="model != null" height="200" tile>
-        <v-row class="fill-height" align="center" justify="center">
-          <h3 class="title">Selected {{ model }}</h3>
-        </v-row>
-      </v-sheet>
-    </v-expand-transition>
-  </v-sheet>
+            <v-card-actions>
+              <v-btn color="grey darken-2" text @click="openpdf(ebook); ebook.published = !ebook.published"
+                >{{ebook.published ? 'Cerrar PDF' : "Leer en línea"}} <v-icon>{{
+                  ebook.published ? "mdi-chevron-up" : "mdi-chevron-down"
+                }}</v-icon></v-btn
+              >
+
+            </v-card-actions>
+          </v-card>
+        </v-slide-item>
+      </v-slide-group>
+    </v-sheet>
+    <div v-if="showpdf">
+      <ViewPDF :pdfPath="url" />
+    </div>
+  </v-container>
 </template>
 
 <script>
@@ -56,20 +39,40 @@ export default {
     return {
       model: null,
       content: "",
+      url: "",
+      showpdf: false,
     };
+  },
+  methods: {
+    openpdf(link) {
+      this.url = link.url;
+      this.showpdf = !link.published;
+      console.log(this.showpdf);
+      return;
+    },
   },
   mounted() {
     const user = this.$store.state.auth.user;
     UserService.getListEBooks(user)
-    .then( (response) => {
+      .then((response) => {
         this.content = response.data;
-        console.log(response);
+
+        console.log(this.content);
       })
-    .catch( (error) => {
-      console.log(error.message);
-      this.$store.dispatch("auth/logout");
-      this.$router.push("/login");
-    });
+      .catch((error) => {
+        console.log(error.response.data.message);
+        this.$store.dispatch("auth/logout");
+        this.$router.push("/login");
+      });
+  },
+  components: {
+    ViewPDF: () => import("./ViewPDF"),
   },
 };
 </script>
+
+<style>
+.list {
+  max-width: 961px;
+}
+</style>

@@ -5,17 +5,12 @@
         <router-link to="/home" class="navbar-brand"> eBook Store </router-link>
       </div>
 
-      <v-btn to="/ebooks" text> Libros </v-btn>
+      <v-btn v-if="currentUser" to="/ebooks" text> Libros </v-btn>
 
-      <v-btn to="/add" text> Agregar </v-btn>
+      <v-btn v-if="showAdminBoard" to="/add" text> Agregar </v-btn>
 
-      <v-btn to="/list" text> Mis libros </v-btn>
+      <v-btn v-if="currentUser" to="/list" text> Mis libros </v-btn>
 
-      <v-btn v-if="currentUser" to="/profile" text> User </v-btn>
-
-      <v-btn v-if="showAdminBoard" to="/admin" text> Admin Board </v-btn>
-
-      <v-btn v-if="showModeratorBoard" to="/mod" text> Moderator Board </v-btn>
 
       <div v-if="currentUser" class="ml-auto">
         <v-btn to="/profile" text>
@@ -24,16 +19,16 @@
         </v-btn>
 
         <v-btn href @click.prevent="logOut" text>
-          <font-awesome-icon icon="sign-out-alt" />LogOut
+          <font-awesome-icon icon="sign-out-alt" />Salir
         </v-btn>
       </div>
 
       <div v-if="!currentUser" class="ml-auto">
         <v-btn to="/register" text>
-          <font-awesome-icon icon="user-plus" />Sign Up
+          <font-awesome-icon icon="user-plus" />Registrarse
         </v-btn>
         <v-btn to="/login" text>
-          <font-awesome-icon icon="sign-in-alt" />Login
+          <font-awesome-icon icon="sign-in-alt" />Ingresar
         </v-btn>
       </div>
     </v-app-bar>
@@ -41,7 +36,7 @@
     <v-main>
       <router-view />
     </v-main>
-    
+
     <Footer> </Footer>
   </v-app>
 </template>
@@ -59,12 +54,6 @@ export default {
       }
       return false;
     },
-    showModeratorBoard() {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes("ROLE_MODERATOR");
-      }
-      return false;
-    },
   },
   methods: {
     logOut() {
@@ -73,7 +62,7 @@ export default {
     },
   },
   components: {
-    Footer: () => import("./components/Footer")
+    Footer: () => import("./components/Footer"),
   },
   mounted() {
     if (!this.currentUser) {

@@ -1,20 +1,103 @@
 <template>
-  <v-row align="center" class="list px-3 mx-auto">
-    <v-col cols="12" sm="8">
-      <v-text-field v-model="searchTitle" label="Search by Title"></v-text-field>
-    </v-col>
+  <v-container align="center" class="list px-3">
+    <v-parallax
+      height="300"
+      drak
+      src="https://www.intelligent-controls.co.uk/wp-content/uploads/sites/18/2016/07/Parallax-Background-Grey-5.jpg"
+    >
+      <v-layout justify-center row wrap>
+        <v-flex xs12 style="text-align: center">
+          <h1 class="display-3 font-weight-thin mb-3">Buscar un Libro</h1>
+          <h4 class="subheading">Encuentra lo que te falta</h4>
+        </v-flex>
 
-    <v-col cols="12" sm="4">
-      <v-btn small @click="page = 1; retrieveEbooks();">
-        Search
-      </v-btn>
-    </v-col>
+        <v-flex xs12>
+          <v-layout align-center justify-center row wrap>
+            <v-flex xs6>
+              <v-form>
+                <v-text-field
+                  v-model="searchTitle"
+                  display-1
+                  white--text
+                  outline
+                  label="Buscar por titulo"
+                >
+                </v-text-field>
+                <v-btn
+                  mt-2
+                  block
+                  @click="
+                    page = 1;
+                    retrieveEbooks();
+                  "
+                  >Buscar</v-btn
+                >
+              </v-form>
+            </v-flex>
+          </v-layout>
+        </v-flex>
+      </v-layout>
+    </v-parallax>
 
-    <v-col cols="12" sm="12">
-      <v-card class="mx-auto" tile>
-        <v-card-title>Libros</v-card-title>
-      </v-card>
-    </v-col>
+    <h2 class="display-1 mb-4 mt-4">Libros disponibles</h2>
+
+    <v-layout :wrap="true">
+      <template v-for="(ebook, i) in ebooks" justify="center">
+        <v-flex pa-1 :key="i" sm6 xs12 md4 justify="center">
+          <v-hover v-slot="{ hover }">
+            <v-card class="card" color="grey lighten-4" max-width="250" shaped>
+              <v-img :src="ebook.image" aspect-ratio="1">
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    class="d-flex transition-fast-in-fast-out grey darken-2 v-card--reveal display-1 white--text"
+                    style="height: 18%"
+                  >
+                    <div class="mx-5">${{ ebook.price }}</div>
+                  </div>
+                </v-expand-transition>
+              </v-img>
+
+              <v-card-title>
+                {{ ebook.title }}
+              </v-card-title>
+              <v-card-subtitle>
+                {{ ebook.author }}
+              </v-card-subtitle>
+              <v-card-text>
+                <div class="subtitle-1">Editorial: {{ ebook.editorial }}</div>
+                <div>Año: {{ ebook.year }}</div>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="grey darken-2" text @click="buy(ebook.id) "
+                  ><v-icon>mdi-cart</v-icon>Comprar</v-btn
+                >
+
+                <v-spacer></v-spacer>
+
+                <v-btn icon @click="ebook.show = !ebook.show">
+                  <v-icon>{{
+                    ebook.show ? "mdi-chevron-up" : "mdi-chevron-down"
+                  }}</v-icon>
+                </v-btn>
+              </v-card-actions>
+
+              <v-expand-transition>
+                <div v-show="ebook.show">
+                  <v-divider></v-divider>
+
+                  <v-card-text>
+                    {{ ebook.description }}
+                  </v-card-text>
+                </div>
+              </v-expand-transition>
+            </v-card>
+          </v-hover>
+        </v-flex>
+      </template>
+    </v-layout>
+
+    <h2 class="display-1 mb-4 mt-4">Ver más</h2>
 
     <v-col cols="12" sm="12">
       <v-row>
@@ -22,7 +105,7 @@
           <v-select
             v-model="pageSize"
             :items="pageSizes"
-            label="Items per Page"
+            label="Libros por página"
             @change="handlePageSizeChange"
           ></v-select>
         </v-col>
@@ -39,60 +122,42 @@
         </v-col>
       </v-row>
     </v-col>
-
-    <v-col cols="12" sm="12">
-      <v-card class="mx-auto" tile>
-        <v-card-title>Libros</v-card-title>
-
-        <v-data-table
-          :headers="headers"
-          :items="ebooks"
-          disable-pagination
-          :hide-default-footer="true"
-        >
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small class="mr-2" @click="editEbook(item.id)">
-              mdi-pencil
-            </v-icon>
-            <v-icon small @click="deleteEbook(item.id)">
-              mdi-delete
-            </v-icon>
-          </template>
-        </v-data-table>
-
-        <v-card-actions v-if="ebooks.length > 0">
-          <v-btn small color="error" @click="removeAllEbooks">
-            Remove All
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+  </v-container>
 </template>
 
 <script>
 import EbookDataService from "../services/ebook.service";
+import UserService from "../services/user.service";
 export default {
   name: "ebooks-list",
   data() {
     return {
       ebooks: [],
       searchTitle: "",
-      headers: [
-        { text: "Title", align: "start", sortable: false, value: "title" },
-        { text: "Description", value: "description", sortable: false },
-        { text: "Status", value: "status", sortable: false },
-        { text: "Actions", value: "actions", sortable: false },
-      ],
-
       page: 1,
       totalPages: 0,
+      totalEbooks: 0,
       pageSize: 3,
+      show: false,
 
       pageSizes: [3, 6, 9],
     };
   },
   methods: {
+    buy(ebook) {
+      const data = {
+        userid: this.$store.state.auth.user.id,
+        ebookid: ebook,
+      };
+      console.log(data);
+      UserService.postBuy(data)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     getRequestParams(searchTitle, page, pageSize) {
       let params = {};
 
@@ -110,6 +175,20 @@ export default {
 
       return params;
     },
+    getDisplayEbook(ebook) {
+      return {
+        id: ebook.id,
+        title: ebook.title,
+        description: ebook.description,
+        status: ebook.published ? "Publicado" : "Pendiente",
+        author: ebook.author,
+        year: ebook.year,
+        editorial: ebook.editorial,
+        price: ebook.price,
+        image: ebook.image,
+        show: false,
+      };
+    },
 
     retrieveEbooks() {
       const params = this.getRequestParams(
@@ -120,9 +199,10 @@ export default {
 
       EbookDataService.getAll(params)
         .then((response) => {
-          const { ebooks, totalPages } = response.data;
+          const { ebooks, totalPages, totalItems } = response.data;
           this.ebooks = ebooks.map(this.getDisplayEbook);
           this.totalPages = totalPages;
+          this.totalEbooks = totalItems;
 
           console.log(response.data);
         })
@@ -170,15 +250,6 @@ export default {
           console.log(e);
         });
     },
-
-    getDisplayEbook(ebook) {
-      return {
-        id: ebook.id,
-        title: ebook.title.substr(0, 20) + "...",
-        description: ebook.description.substr(0, 20) + "...",
-        status: ebook.published ? "Published" : "Pending",
-      };
-    },
   },
   mounted() {
     this.retrieveEbooks();
@@ -188,6 +259,9 @@ export default {
 
 <style>
 .list {
-  max-width: 750px;
+  max-width: 961px;
+}
+.v-card--reveal {
+  opacity: 0.75;
 }
 </style>
