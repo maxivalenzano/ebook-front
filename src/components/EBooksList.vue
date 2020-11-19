@@ -69,9 +69,7 @@
                 <div>Año: {{ ebook.year }}</div>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="grey darken-2" text @click="buy(ebook.id) "
-                  ><v-icon>mdi-cart</v-icon>Comprar</v-btn
-                >
+                <ModalBuy :idebook="ebook.id" />
 
                 <v-spacer></v-spacer>
 
@@ -127,7 +125,7 @@
 
 <script>
 import EbookDataService from "../services/ebook.service";
-import UserService from "../services/user.service";
+import ModalBuy from "./ModalBuy";
 export default {
   name: "ebooks-list",
   data() {
@@ -144,20 +142,6 @@ export default {
     };
   },
   methods: {
-    buy(ebook) {
-      const data = {
-        userid: this.$store.state.auth.user.id,
-        ebookid: ebook,
-      };
-      console.log(data);
-      UserService.postBuy(data)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-    },
     getRequestParams(searchTitle, page, pageSize) {
       let params = {};
 
@@ -253,6 +237,9 @@ export default {
   },
   mounted() {
     this.retrieveEbooks();
+  },
+  components: {
+    ModalBuy,
   },
 };
 </script>

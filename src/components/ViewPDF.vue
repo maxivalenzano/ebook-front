@@ -5,7 +5,15 @@
         <v-toolbar-title>Visor de PDF con Vuejs 2</v-toolbar-title>
         <v-flex> </v-flex>
       </v-toolbar>
-      <v-container>
+      <div v-if="spinner" class="text-center">
+        <v-progress-circular
+          :size="70"
+          :width="7"
+          indeterminate
+          color="grey"
+        ></v-progress-circular>
+      </div>
+      <v-container v-else>
         <v-layout row wrap>
           <v-flex>
             <pdf
@@ -27,7 +35,7 @@
           </v-btn>
         </v-flex>
         <v-flex>
-         <v-btn block text tile>{{ currentPage }} / {{ numPages }}</v-btn>
+          <v-btn block text tile>{{ currentPage }} / {{ numPages }}</v-btn>
         </v-flex>
         <v-flex>
           <v-btn class="grey" block :disabled="noNextPage" @click="nextPage()"
@@ -51,6 +59,7 @@ export default {
       src: "",
       currentPage: 1,
       numPages: 0,
+      spinner: true,
     };
   },
   components: {
@@ -76,16 +85,10 @@ export default {
     this.src = pdf.createLoadingTask(this.$props.pdfPath);
     this.src.promise.then((pdf) => {
       this.numPages = pdf.numPages;
+      this.spinner = false;
     });
   },
 };
-// {{ numPages }}
-// <pdf
-//   :src="src"
-//   :page="1"
-//   @num-pages="pageCount = $event"
-//   @page-loaded="currentPage = $event"
-// ></pdf>
 </script>
 
 <style>
