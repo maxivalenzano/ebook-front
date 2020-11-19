@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue';
 import Register from '../views/Register.vue';
+import Recovery from '../views/Recovery.vue';
 
 Vue.use(VueRouter)
 
@@ -22,6 +23,10 @@ const routes = [
   {
     path: '/register',
     component: Register
+  },
+  {
+    path: '/recovery',
+    component: Recovery
   },
   {
     path: '/profile',
@@ -58,7 +63,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/register', '/home'];
+  const publicPages = ['/recovery', '/login', '/register', '/home'];
   const authRequired = !publicPages.includes(to.path);
   const loggedIn = localStorage.getItem('user');
 

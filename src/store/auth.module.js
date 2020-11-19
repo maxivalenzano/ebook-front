@@ -36,7 +36,21 @@ export const auth = {
           return Promise.reject(error);
         }
       );
+    },
+    recovery({ commit }, user) {
+      return AuthService.recovery(user).then(
+        response => {
+          commit('recoverySuccess');
+          return Promise.resolve(response.data);
+        },
+        error => {
+          commit('recoveryFailure');
+          return Promise.reject(error);
+        }
+      );
     }
+
+
   },
   mutations: {
     loginSuccess(state, user) {
@@ -55,6 +69,12 @@ export const auth = {
       state.status.loggedIn = false;
     },
     registerFailure(state) {
+      state.status.loggedIn = false;
+    },
+    recoverySuccess(state) {
+      state.status.loggedIn = false;
+    },
+    recoveryFailure(state) {
       state.status.loggedIn = false;
     }
   }

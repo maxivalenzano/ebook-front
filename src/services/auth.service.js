@@ -29,6 +29,14 @@ class AuthService {
       password: user.password
     });
   }
+
+  recovery(user) {
+    return http.post('/auth/recovery', {
+      username: user.username,
+      email: user.email,
+      password: user.password
+    });
+  }
 }
 
 export default new AuthService();

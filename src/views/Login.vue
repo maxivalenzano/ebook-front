@@ -20,7 +20,9 @@
             v-if="errors.has('email')"
             class="alert alert-danger"
             role="alert"
-          >Ingrese su correo</div>
+          >
+            Ingrese su correo
+          </div>
         </div>
         <div class="form-group">
           <label for="password">Contraseña</label>
@@ -35,71 +37,83 @@
             v-if="errors.has('password')"
             class="alert alert-danger"
             role="alert"
-          >La contraseña es requerida</div>
+          >
+            La contraseña es requerida
+          </div>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block" :disabled="loading">
-            <span v-show="loading" class="spinner-border spinner-border-sm"></span>
-            <span>Login</span>
+            <span
+              v-show="loading"
+              class="spinner-border spinner-border-sm"
+            ></span>
+            <span>Ingresar</span>
           </button>
         </div>
         <div class="form-group">
-          <div v-if="message" class="alert alert-danger" role="alert">{{message}}</div>
+          <div v-if="message" class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
         </div>
       </form>
+      <div>
+        <router-link to="/recovery"> ¿Ha olvidado su contraseña? </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import User from '../models/user';
+import User from "../models/user";
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
-      user: new User('', ''),
+      user: new User("", ""),
       loading: false,
-      message: ''
+      message: "",
     };
   },
   computed: {
     loggedIn() {
       return this.$store.state.auth.status.loggedIn;
-    }
+    },
   },
   created() {
     if (this.loggedIn) {
-      this.$router.push('/profile');
+      this.$router.push("/profile");
     }
   },
   methods: {
     handleLogin() {
       this.loading = true;
-      this.$validator.validateAll().then(isValid => {
+      this.$validator.validateAll().then((isValid) => {
         if (!isValid) {
           this.loading = false;
           return;
         }
 
         if (this.user.email && this.user.password) {
-            console.log(this.$store.dispatch('auth/login', this.user));
-          this.$store.dispatch('auth/login', this.user).then(
+          console.log(this.$store.dispatch("auth/login", this.user));
+          this.$store.dispatch("auth/login", this.user).then(
             () => {
-              this.$router.push('/profile');
+              this.$router.push("/profile");
             },
-            error => {
+            (error) => {
               this.loading = false;
               this.message =
-                (error.response && error.response.data && error.response.data.message) ||
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
                 error.message ||
                 error.toString();
             }
           );
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

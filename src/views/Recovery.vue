@@ -6,40 +6,8 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <form name="form" @submit.prevent="handleRegister">
+      <form name="form" @submit.prevent="handleRecovery">
         <div v-if="!successful">
-          <div class="form-group">
-            <label for="firstname">Nombre</label>
-            <input
-              v-model="user.firstname"
-              v-validate="'required|min:3|max:20'"
-              type="text"
-              class="form-control"
-              name="firstname"
-            />
-            <div
-              v-if="submitted && errors.has('firstname')"
-              class="alert-danger"
-            >
-              {{ errors.first("firstname") }}
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="lastname">Apellido</label>
-            <input
-              v-model="user.lastname"
-              v-validate="'required|min:3|max:20'"
-              type="text"
-              class="form-control"
-              name="lastname"
-            />
-            <div
-              v-if="submitted && errors.has('lastname')"
-              class="alert-danger"
-            >
-              {{ errors.first("lastname") }}
-            </div>
-          </div>
           <div class="form-group">
             <label for="username">Nombre de usuario</label>
             <input
@@ -90,7 +58,7 @@
             </div>
           </div>
           <div class="form-group">
-            <button class="btn btn-primary btn-block">Registrarse</button>
+            <button class="btn btn-primary btn-block">Restablecer</button>
           </div>
         </div>
       </form>
@@ -110,10 +78,10 @@
 import User from "../models/user";
 
 export default {
-  name: "Register",
+  name: "Recovery",
   data() {
     return {
-      user: new User("", "", "", "", ""),
+      user: new User("", "", ""),
       submitted: false,
       successful: false,
       message: "",
@@ -130,12 +98,12 @@ export default {
     }
   },
   methods: {
-    handleRegister() {
+    handleRecovery() {
       this.message = "";
       this.submitted = true;
       this.$validator.validate().then((isValid) => {
         if (isValid) {
-          this.$store.dispatch("auth/register", this.user).then(
+          this.$store.dispatch("auth/recovery", this.user).then(
             (data) => {
               this.message = data.message;
               this.successful = true;
